@@ -266,13 +266,14 @@ define mcollective::user(
     $hosts = range( '1', $pool_size )
     $connectors = prefix( $hosts, "${username}_" )
     mcollective::user::connector { $connectors:
-      username       => $username,
-      callerid       => $callerid,
-      homedir        => $homedir_real,
-      connector      => $_connector,
-      middleware_ssl => $_middleware_ssl,
-      ssl_ciphers    => $_ssl_ciphers,
-      order          => '60',
+      username         => $username,
+      callerid         => $callerid,
+      homedir          => $homedir_real,
+      connector        => $_connector,
+      middleware_ssl   => $_middleware_ssl,
+      securityprovider => $_securityprovider,
+      ssl_ciphers      => $_ssl_ciphers,
+      order            => '60',
     }
   }
 }

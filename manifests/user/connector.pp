@@ -5,6 +5,7 @@ define mcollective::user::connector(
   $homedir,
   $order,
   $connector,
+  $securityprovider,
   $middleware_ssl,
   $ssl_ciphers,
 ) {
@@ -18,11 +19,21 @@ define mcollective::user::connector(
       value    => "${homedir}/.mcollective.d/credentials/certs/ca.pem",
     }
 
-    mcollective::user::setting { "${username} plugin.${connector}.pool.${i}.ssl.cert":
-      setting  => "plugin.${connector}.pool.${i}.ssl.cert",
-      username => $username,
-      order    => $order,
-      value    => "${homedir}/.mcollective.d/credentials/certs/server_public.pem",
+    if $securityprovider == 'sshkey' {
+      mcollective::user::setting { "${username} plugin.${connector}.pool.${i}.ssl.cert":
+        setting  => "plugin.${connector}.pool.${i}.ssl.cert",
+        username => $username,
+        order    => $order,
+        value    => "${homedir}/.mcollective.d/credentials/certs/server_public.pem",
+      }
+    }
+    else {
+      mcollective::user::setting { "${username} plugin.${connector}.pool.${i}.ssl.cert":
+        setting  => "plugin.${connector}.pool.${i}.ssl.cert",
+        username => $username,
+        order    => $order,
+        value    => "${homedir}/.mcollective.d/credentials/certs/${callerid}.pem",
+      }
     }
 
     mcollective::user::setting { "${username} plugin.${connector}.pool.${i}.ssl.key":
